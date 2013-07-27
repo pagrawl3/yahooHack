@@ -3,15 +3,21 @@ var mongoose = require('mongoose'),
 
 exports.createNewRoom = function (data, socket) {
 	console.log('creating new room');
-	var newRoom = new Room({
-		name: data.name,
-		url : 'localhost:3000/rooms/'+date.name,
-		clients: [socket]
+	var newUrl = 'localhost:3000/rooms/'+data.name,
+		newRoom = new Room({
+			room_name: data.name,
+			url : newUrl,
+			files : [String]
+		});
+	newRoom.save(function (err, data) {
+		console.log(err, data)
 	});
-	newRoom.save();
-	socket.emit('createNewRoomSuccess', {data: newRoom})
+	socket.emit('createNewRoomSuccess', {url : newUrl})
 }
 
 exports.getRoom = function (req, res) {
-	console.log('room name : ', req.params.name)
+	var roomName = req.params.name;
+	Room.find({room_name: roomName}, function (err, docs) {
+		res.render('rooms', {room : docs[0].name, url : docs[0].url})
+	})
 }
