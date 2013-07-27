@@ -17,8 +17,12 @@ $(document).ready(function() {
 					socket.emit('test', {success: true});
 				},offset);
 
-				if (i = 9)
+				if (i = 9) {
+					offset = 0;
+					stop = 0;
+					start = 0;
 					offsetCalibrationCompletePub(player);
+				}
 			}
 			socket.on('testCallback', function(data) {
 				stop = window.performance.now();
@@ -42,6 +46,7 @@ $(document).ready(function() {
 		}
 		var once = false;
 		var twice = false;
+		var thrice = false;
 		function playSub(player) {
 			var pubTime = 0;
 			var latency = 0;
@@ -63,10 +68,17 @@ $(document).ready(function() {
 					twice = true;
 					console.log('here');
 				}
+				if (((endTime - startTime)/3000 > 1) && !twice) {
+					player.muted = false;
+					once = false;
+					thrice = true;
+					console.log('here');
+				}
 
 			});
 			socket.on('pauseBroadcast', function() {
 				player.trigger('pause');
+				thrice = false;
 				twice = false;
 				once = false;
 			});
@@ -91,7 +103,7 @@ $(document).ready(function() {
 
 	$('#createRoom').click(function() {
 		console.log(new Date().getTime());
-		socket.emit('createNewRoom', {name: new Date().getTime()});
+		socket.emit('createNewRoom', {name: new Date().getTime().toString().slice(-6,-1)});
 	});
 
 	socket.on('embedSongSuccess', function (data) {
@@ -119,7 +131,7 @@ $(document).ready(function() {
 			}, 200);
 		} else {
 			function createNode(url, filename) {
-				return node = '<li url='+url+' class="song colums large-12"><div class="album"></div><span class="title">'+filename+' <br></span><span class="title"> <br></span><span class="artist"></span></li>'
+				return node = '<li url='+url+' class="song colums large-12"><div class="icon rotating rot"></div><div class="album"></div><span class="filename">'+data.filename+'</span><br><span class="title"></span><br><span class="artist"></span></li>'
 			}
 			$('ul.songs').append(createNode(data.url, data.filename))
 			socket.emit('updateQueue', {node: createNode(data.url, data.filename)})
@@ -142,6 +154,34 @@ $(document).ready(function() {
 			// bindRoomListeners();
 		},500)
 	});
+
+	socket.on('loadingSuccess', function(data) {
+		console.log(data);
+		if ($('li.song').length <=0) {
+			$('.now-playing .title').html(data.title);
+			$('.now-playing .artist').html(data.artist);
+		} else {
+			$('li.song').last().children('.title').html(data.title);
+			$('li.song').last().children('.artist').html(data.artist);
+			$('li.song').last().children('.artist').css('opacity','1');
+			$('li.song').last().children('.title').css('opacity','1');
+		}
+	})
+
+	socket.on('getAlbumArtSuccess', function(data) {
+		console.log(data);
+		if ($('li.song').length <=0) {
+			$('.now-playing .art').css('background', 'url('+data.albumArt+') no-repeat');
+			$('.now-playing .art').css('background-size', '100%');
+			$('.now-playing .art').css('background-position', 'center center');
+		} else {
+			$('li.song').last().children('.album').css('background', 'url('+data.albumArt+') no-repeat');
+			$('li.song').last().children('.album').css('background-size', '100%');
+			$('li.song').last().children('.album').css('background-position', 'center center');
+			$('li.song').last().children('.album').css('opacity', '1');
+			$('li.song').last().children('.rot').css('opacity', '0');
+		}
+	})
 
 
 	$('.test-button').on('click', function() {

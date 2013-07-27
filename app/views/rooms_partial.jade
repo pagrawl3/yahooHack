@@ -8,7 +8,7 @@ if (files)
 	section.now-playing.row
 		.np-wrapper.columns.large-12
 			h2 Now Playing
-			.art.columns.large-4
+			.art.columns.large-4(style="background: url(#{files[0].albumArt}); background-size: auto 100%; background-position: center center;")
 			.info.columns.large-8
 				.text
 					h3.title #{files[0].title}
@@ -18,6 +18,9 @@ if (files)
 				else
 					#audio-over
 					audio#sub(src=files[0].url, controls)
+					br
+					br
+					.button.test-button RESYNC
 else
 	section.now-playing.row.hidden
 		.np-wrapper.columns.large-12
@@ -46,10 +49,13 @@ if (files)
 			each item in files
 				if (item != files[0])
 					li.song.colums.large-12(url = item.url)
-						.album
-						span.title #{item.filename} <br>
-						span.title #{item.title} <br>
-						span.artist #{item.artist}
+						.icon.rotating.rot(style='opacity:0;')
+						.album(style="background: url(#{item.albumArt}); background-size: auto 100%; background-position: center center; opacity:1")
+						span.title(style='opacity:1;') #{item.title}
+						br
+						span.filename(style='opacity:1;') #{item.filename}
+						br
+						span.artist(style='opacity:1;') #{item.artist}
 else
 	section.queue.row.hidden
 		h3 Queue

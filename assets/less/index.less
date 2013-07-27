@@ -105,7 +105,7 @@ section.splash {
 	input {
 		display: block;
 		padding: 0 unit(20px/16px, em) !important;
-		width: unit(300px/16px, em) !important;
+		width: unit(500px/16px, em) !important;
 		background: transparent !important;
 		border: 3px solid #2ECC71 !important;
 		color: #FFF !important;
@@ -227,23 +227,41 @@ section.queue {
 			margin: 10px 0;
 			background: #E5E5E5;
 			overflow: hidden;
+			min-height: 120px;
 			.album {
 				position: absolute;
 				top: 0;
 				left: 0;
-				// float: left;
+				float: left;
 				width: 100px;
 				height: 100%;
 				background: #DDD;
+				-webkit-transition: 0.2s ease-out;
+				-moz-transition: 0.2s ease-out;
+				-ms-transition: 0.2s ease-out;
+				-o-transition: 0.2s ease-out;
+				transition: 0.2s ease-out;
+				opacity: 0;
 			}
 			span {
 				margin-left: 100px;
+				-webkit-transition: 0.2 ease-out;
+				-moz-transition: 0.2 ease-out;
+				-ms-transition: 0.2 ease-out;
+				-o-transition: 0.2 ease-out;
+				transition: 0.2 ease-out;
+				opacity: 0;
 				&.title {
 					font-weight: 600;
 					font-size: 1.2em;
 				}
 				&.artist {
 					color: #777;
+				}
+				&.filename{
+					font-weight: 600;
+					font-size: 1.2em;
+					opacity: 1;
 				}
 			}
 		}
@@ -261,6 +279,21 @@ section.queue {
 
 .rotating {
     -webkit-animation: rotating 20s linear infinite;
+}
+
+.rot {
+	background: url(../img/logo.svg);
+	background-size: 64px 64px;
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	z-index: 3231;
+	top: 40px;
+	left: 23px;
+	margin: 0 auto;
+	// margin-top: 50%;
+	// margin-top: -15px;
+	-webkit-animation: rotating 2s linear infinite;
 }
 
 section.wrapper {

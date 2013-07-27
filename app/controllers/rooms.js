@@ -25,12 +25,18 @@ exports.createNewRoom = function (data, socket) {
 exports.getRoom = function (req, res) {
 	var roomName = req.params.roomId;
 	console.log(req.params.roomId)
-	Room.findOne({room_name: roomName}, function (err, docs) {
-		console.log('logging roomName : ', docs)
-		// res.render('index');
-		docs['userType'] = 'subscriber'
-		res.render('rooms', docs)
-	})
+	if (!!roomName) {
+		Room.findOne({room_name: roomName}, function (err, docs) {
+			console.log('logging roomName : ', docs)
+			// res.render('index');
+			docs['userType'] = 'subscriber'
+			res.render('rooms', docs)
+		})
+	}
+	else {
+		console.log('else statement here');
+		getRoom(req,res);
+	}
 }
 
 getAlbumArt = function (artist_id, count, socket, room, data) {
@@ -45,7 +51,8 @@ getAlbumArt = function (artist_id, count, socket, room, data) {
     			console.log(newRoom.files[0])
     			newRoom.save(function () {
 					socket.emit('getAlbumArtSuccess', {albumArt: temp.response.images[0].url})
-    			});		
+					socket.broadcastemit('getAlbumArtSuccess', {albumArt: temp.response.images[0].url})
+    			});	
 			})
 		} else {
 			data.data['albumArt'] = 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'
@@ -55,7 +62,8 @@ getAlbumArt = function (artist_id, count, socket, room, data) {
     			console.log(newRoom.files[0])
     			newRoom.save(function () {
 					socket.emit('getAlbumArtSuccess', {albumArt: 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'})
-    			});		
+					socket.broadcast.emit('getAlbumArtSuccess', {albumArt: 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'})
+    			});	
 			})
 		}
 	})
@@ -84,6 +92,7 @@ getMetadata = function (url, count, files, room, data, socket) {
 		        			newRoom.save(function () {
 			        			console.log('saved ; now emitting')
 								socket.emit('loadingSuccess', {title: data.data.filename, artist: 'Unknown'})	
+								socket.broadcast.emit('loadingSuccess', {title: data.data.filename, artist: 'Unknown'})	
 		        			});
 		        		})
 	        		}
@@ -97,6 +106,7 @@ getMetadata = function (url, count, files, room, data, socket) {
 	        			newRoom.save(function () {
 		        			console.log('saved ; now emitting')
 							socket.emit('loadingSuccess', {title: data.data.title, artist: data.data.artist})
+							socket.broadcast.emit('loadingSuccess', {title: data.data.title, artist: data.data.artist})
 							getAlbumArt(body.response.track.artist_id, 0, socket, newRoom, data)
 	        			});
 	        		})

@@ -88,7 +88,7 @@ section.splash .logo.inner {
 .room-url input {
   display: block;
   padding: 0 1.25em !important;
-  width: 18.75em !important;
+  width: 31.25em !important;
   background: transparent !important;
   border: 3px solid #2ECC71 !important;
   color: #FFF !important;
@@ -205,17 +205,31 @@ section.queue ul.songs li.song {
   margin: 10px 0;
   background: #E5E5E5;
   overflow: hidden;
+  min-height: 120px;
 }
 section.queue ul.songs li.song .album {
   position: absolute;
   top: 0;
   left: 0;
+  float: left;
   width: 100px;
   height: 100%;
   background: #DDD;
+  -webkit-transition: 0.2s ease-out;
+  -moz-transition: 0.2s ease-out;
+  -ms-transition: 0.2s ease-out;
+  -o-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
+  opacity: 0;
 }
 section.queue ul.songs li.song span {
   margin-left: 100px;
+  -webkit-transition: 0.2 ease-out;
+  -moz-transition: 0.2 ease-out;
+  -ms-transition: 0.2 ease-out;
+  -o-transition: 0.2 ease-out;
+  transition: 0.2 ease-out;
+  opacity: 0;
 }
 section.queue ul.songs li.song span.title {
   font-weight: 600;
@@ -223,6 +237,11 @@ section.queue ul.songs li.song span.title {
 }
 section.queue ul.songs li.song span.artist {
   color: #777;
+}
+section.queue ul.songs li.song span.filename {
+  font-weight: 600;
+  font-size: 1.2em;
+  opacity: 1;
 }
 @-webkit-keyframes rotating {
   from {
@@ -234,6 +253,18 @@ section.queue ul.songs li.song span.artist {
 }
 .rotating {
   -webkit-animation: rotating 20s linear infinite;
+}
+.rot {
+  background: url(../img/logo.svg);
+  background-size: 64px 64px;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  z-index: 3231;
+  top: 40px;
+  left: 23px;
+  margin: 0 auto;
+  -webkit-animation: rotating 2s linear infinite;
 }
 section.wrapper {
   margin-top: 50px;
