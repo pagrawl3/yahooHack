@@ -37,10 +37,21 @@ exports.embedSong = function (data, socket) {
 		if (!docs.files) {
 			docs.files = []
 		}
-		docs.files.push(data.data.url)
+		console.log(docs.files)
+		docs.files.push(data.data)
 		docs.save(function (err) {
-			socket.emit('embedSongSuccess', {success: true, message: 'Song was embedded', url: data.data.url})
+			socket.emit('embedSongSuccess', {success: true, message: 'Song was embedded', url: data.data.url, files: docs.files})
 		});
+	})
+}
+
+exports.pop = function (data, socket) {
+	Room.findOne({room_name: data.roomName}, function (err, docs) {
+		docs.files = docs.files.slice(1)
+		docs.save(function (err, data) {
+			console.log('testing pop')
+			socket.emit('popSuccess', {success: true, message: 'Last played song was deleted', files: docs.files})
+		})
 	})
 }
 
