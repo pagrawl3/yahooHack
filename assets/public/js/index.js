@@ -4,20 +4,24 @@ $(document).ready(function() {
 
 	filepicker.setKey('AKuopPE6CTw0vqFI3RA7Az');
 
-	$('#upload').click(function() {
-		console.log('here')
-		filepicker.pickAndStore({},{},function(data){
-		   console.log(JSON.stringify(data));
-		   $('#url').html(data[0].url);
-		   // $('#url').html(data[0].url)
-		   var roomName = window.roomName
-		   socket.emit('embedSong', {data: data[0], roomName: roomName})
+	function bindRoomListeners () {
+		$('#upload').click(function() {
+			console.log('here')
+			filepicker.pickAndStore({},{},function(data){
+			   console.log(JSON.stringify(data));
+			   $('#url').html(data[0].url);
+			   // $('#url').html(data[0].url)
+			   var roomName = window.roomName;
+			   socket.emit('embedSong', {data: data[0], roomName: roomName});
+			});
 		});
-	})
+	}
 
+	
 	$('#createRoom').click(function() {
-		socket.emit('createNewRoom', $('#roomNum').val());
-	})
+		console.log($('#roomNum').val());
+		socket.emit('createNewRoom', {name: $('#roomNum').val()});
+	});
 
 	//Establish a socket conenction with the server for future stuff
 	var socket = io.connect('/');
@@ -28,7 +32,13 @@ $(document).ready(function() {
 
 	socket.on('createNewRoomSuccess', function (data) {
 		window.roomName = data.name;
-		console.log(data)
-	})
+		console.log(data);
+		$('#wrapper').replaceWith(data.html);
+		bindRoomListeners();
+	});
 
-})
+	socket.on('embedSongSuccess', function (data) {
+		$('#player').toggleClass('hidden');
+	});
+
+});

@@ -1,6 +1,8 @@
 include ./includes/header
 
 body
-	input#roomNum(type='text', placeholder="Room #")
-	a#createRoom.button Create Room
+	div#wrapper.row
+		div.large-12.columns
+		input#roomNum(type='text', placeholder="Room #")
+		a#createRoom.button Create Room
 	include ./includes/footer

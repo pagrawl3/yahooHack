@@ -34,8 +34,8 @@ exports.embedSong = function (data, socket) {
 			docs.files = []
 		}
 		docs.files.push(data.data.url)
-		docs.save(function (err, data) {
-			socket.emit('embedSongSuccess', {success: true, message: 'Song was embedded'})
+		docs.save(function (err) {
+			socket.emit('embedSongSuccess', {success: true, message: 'Song was embedded', url: data.data.url})
 		});
 	})
 }
