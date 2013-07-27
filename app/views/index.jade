@@ -1,6 +1,13 @@
 include ./includes/header
+
 body
-	h1 Hello World!
-	button(id='play') PLAY!
-	button(id='stop') STOP!
+	#wrapper.row
+		section.splash.large-12.small-12.columns
+			.logo.rotating
+			//- .logo.inner
+			h1 Musync
+			h4 Some description here
+		.large-12.small-12.columns.text-center
+			a#createRoom.button Create Room
+
 	include ./includes/footer
