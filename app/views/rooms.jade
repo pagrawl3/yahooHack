@@ -6,5 +6,5 @@ html(lang="en")
 			each item in files
 				- var jsonString = item['url']
 				div
-					audio#player(src=jsonString, controls)
+					audio#sub(src=jsonString, controls)
 		include ./includes/footer
