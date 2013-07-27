@@ -18,7 +18,7 @@ exports.createNewRoom = function (data, socket) {
         var template = fs.readFileSync(pathToTemplate, 'utf8');
         var jadeFn = jade.compile(template, { filename: pathToTemplate, pretty: true });
         var renderedTemplate = jadeFn({room: data.name});
-        socket.emit('createNewRoomSuccess', {html : renderedTemplate, url : newUrl, name: data.name})
+        socket.emit('createNewRoomSuccess', {html : renderedTemplate, url : newUrl, name: data.name, userType: 'publisher'})
 	});
 }
 
@@ -28,6 +28,7 @@ exports.getRoom = function (req, res) {
 	Room.findOne({room_name: roomName}, function (err, docs) {
 		console.log('logging roomName : ', docs)
 		// res.render('index');
+		docs['userType'] = 'subscriber'
 		res.render('rooms', docs)
 	})
 }
