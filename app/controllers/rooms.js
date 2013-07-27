@@ -17,7 +17,7 @@ exports.createNewRoom = function (data, socket) {
 		var pathToTemplate = require('path').resolve(__dirname, '../views') + '/rooms_partial.jade';
         var template = fs.readFileSync(pathToTemplate, 'utf8');
         var jadeFn = jade.compile(template, { filename: pathToTemplate, pretty: true });
-        var renderedTemplate = jadeFn({room: data.name});
+        var renderedTemplate = jadeFn({room_name: data.name});
         socket.emit('createNewRoomSuccess', {html : renderedTemplate, url : newUrl, name: data.name, userType: 'publisher'})
 	});
 }
@@ -35,18 +35,13 @@ exports.getRoom = function (req, res) {
 
 getAlbumArt = function (artist_id, count, socket) {
     console.log(artist_id, typeof(artist_id))
-	request.post(
-	    'http://developer.echonest.com/api/v4/artist/images',
-	    { form: { api_key: 'MYH0286UM2UX0WTYI', id: artist_id, format: 'json', results: 1, start: 0, license: 'unknown' } },
-	    function (error, response, body) {
-	    	console.log('inside the album art response')
-	    	console.log(error, response.statusCode)
-	        if (!error && response.statusCode == 200) {
-	        	console.log('emmitting', JSON.parse(body).response.images[0].url)
-	        	socket.emit('getAlbumArtSuccess', {albumArt : JSON.parse(body).response.images[0].url})
-	        }
-	    }
-	);
+	request.get('http://developer.echonest.com/api/v4/artist/images?api_key=MYH0286UM2UX0WTYI&id='+artist_id+'&format=json&results=1&start=0&license=unknown', function (err, data){
+		var temp = JSON.parse(data.body)
+		if (!!temp.response.images && temp.response.images.length > 0)
+			socket.emit('getAlbumArtSuccess', {albumArt: temp.response.images[0].url})
+		else
+			socket.emit('getAlbumArtSuccess', {albumArt: 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'})
+	})
 }
 
 // http://developer.echonest.com/api/v4/artist/images?api_key=MYH0286UM2UX0WTYI&id=ARH6W4X1187B99274F&format=json&results=1&start=0&license=unknown
@@ -74,6 +69,7 @@ getMetadata = function (url, count, files, room, data, socket) {
 	        			newRoom.save(function () {
 		        			console.log('saved ; now emitting')
 							socket.emit('loadingSuccess', {title: data.data.title, artist: data.data.artist})
+							getAlbumArt(body.response.track.artist_id, 0, socket)
 	        			});
 	        		})
 					// if (!!body.response.track.artist_id) {
