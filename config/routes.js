@@ -48,6 +48,10 @@ module.exports = function(app, io) {
  	sock.get('pause', function(data, socket) {
  		socket.broadcast.emit('pauseBroadcast');
  	}, io)
+
+ 	sock.get('updateQueue', function(data, socket) {
+ 		socket.broadcast.emit('updateQueueSuccess', {node: data.node});
+ 	}, io)
 }
 
 

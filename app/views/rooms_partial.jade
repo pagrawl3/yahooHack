@@ -1,7 +1,7 @@
 header
 	.room-url
 		.icon.link
-		input(type="text", value="musync.com/rooms/#{room}", readonly)
+		input(type="text", value="musync.com/rooms/#{room_name}", readonly)
 	.logo
 
 if (files)
@@ -45,7 +45,7 @@ if (files)
 		ul.songs
 			each item in files
 				if (item != files[0])
-					li.song.colums.large-12(url = #{item.url})
+					li.song.colums.large-12(url = item.url)
 						.album
 						span.title #{item.filename} <br>
 						span.title #{item.title} <br>

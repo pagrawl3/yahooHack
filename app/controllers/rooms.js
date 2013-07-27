@@ -103,7 +103,7 @@ exports.pop = function (data, socket) {
 		docs.files = docs.files.slice(1)
 		docs.save(function (err, data) {
 			console.log('testing pop')
-			socket.emit('popSuccess', {success: true, message: 'Last played song was deleted', files: docs.files})
+			socket.broadcast.emit('popSuccess', {success: true, message: 'Last played song was deleted', files: docs.files})
 		})
 	})
 }

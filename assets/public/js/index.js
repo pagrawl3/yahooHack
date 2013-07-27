@@ -18,7 +18,7 @@ $(document).ready(function() {
 				},offset);
 
 				if (i = 9)
-				 offsetCalibrationCompletePub(player);
+					offsetCalibrationCompletePub(player);
 			}
 			socket.on('testCallback', function(data) {
 				stop = window.performance.now();
@@ -109,7 +109,10 @@ $(document).ready(function() {
 				console.log('paused');
 				socket.emit('pause');
 			}).on('ended', function(){
-				socket.emit(pop, {roomName: window.roomName});
+				socket.emit('pop', {roomName: window.roomName});
+				$('#main-player').attr('src', $($('li.song')[0]).attr('url'));
+				$($('li.song')[0]).remove();
+				playPub(player);
 			})
 			window.setTimeout(function(){
 				$('.no-songs-wrapper').css('display', 'none');
@@ -119,8 +122,13 @@ $(document).ready(function() {
 				return node = '<li url='+url+' class="song colums large-12"><div class="album"></div><span class="title">'+filename+' <br></span><span class="title"> <br></span><span class="artist"></span></li>'
 			}
 			$('ul.songs').append(createNode(data.url, data.filename))
+			socket.emit('updateQueue', {node: createNode(data.url, data.filename)})
 		}
 	});
+
+	socket.on('updateQueueSuccess', function(data) {
+		$('ul.songs').append(data.node);
+	})
 
 	socket.on('createNewRoomSuccess', function (data) {
 		window.roomName = data.name;
@@ -142,6 +150,10 @@ $(document).ready(function() {
 
 	socket.on('popSuccess', function (data) {
 		console.log(data)
+		var player2 = $('#sub');
+		player2.attr('src', $($('li.song')[0]).attr('url'));
+		$($('li.song')[0]).remove();
+		playSub(player2);
 	})
 
 	socket.on('play', function () {
