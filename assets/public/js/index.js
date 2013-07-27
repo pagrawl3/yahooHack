@@ -4,9 +4,6 @@ $(document).ready(function() {
 
 	filepicker.setKey('AKuopPE6CTw0vqFI3RA7Az');
 
-	window.trigger = 1;
-	window.emit = 1;
-
 	function bindRoomListeners () {
 		$('#upload').click(function() {
 			console.log('here')
@@ -43,19 +40,14 @@ $(document).ready(function() {
 	});
 
 	socket.on('embedSongSuccess', function (data) {
-		// $('#upload').hide();
-		console.log(data.files)
-		$('#player').toggleClass('hidden').attr('src', data.url).on('play', function () {
-			if (window.emit) {
-				socket.emit('startPlay');
-				window.trigger = 0;
-			}
-			window.emit = 1;
-			console.log(this)
-			document.getElementById('player').addEventListener('ended', function() {
-				socket.emit('pop', {roomName: window.roomName})
-			})
+		var player = $('<audio controls></audio>')
+		player.on('ended', function () {
+			this.remove();
+			socket.emit('pop', {roomName: window.roomName})
 		});
+		player.attr('src', data.url).hide();
+		$('#queue').append($('<div></div>').append(player));
+		player.fadeIn(800);
 	});
 
 	socket.on('popSuccess', function (data) {
@@ -63,11 +55,7 @@ $(document).ready(function() {
 	})
 
 	socket.on('play', function () {
-		if (window.trigger) {
-			$('#player').trigger('play');
-			window.emit = 0;
-		}
-		window.trigger = 1;
+
 	})
 
 });
