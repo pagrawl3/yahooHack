@@ -8,13 +8,12 @@ $(document).ready(function() {
 		console.log('here')
 		filepicker.pickAndStore({},{},function(data){
 		   console.log(JSON.stringify(data));
-		   $('#url').html(data[0].url)
+		   $('#url').html(data[0].url);
 		});
 	})
 
-	$('#room').click(function() {
-		var roomName = prompt('Enter name for new room')
-		socket.emit('createNewRoom', {name: roomName});
+	$('#createRoom').click(function() {
+		socket.emit('createNewRoom', $('#roomNum').val());
 	})
 
 	//Establish a socket conenction with the server for future stuff
@@ -25,6 +24,7 @@ $(document).ready(function() {
 	});
 
 	socket.on('createNewRoomSuccess', function (data) {
+		window.roomName = data.name;
 		console.log(data)
 	})
 
