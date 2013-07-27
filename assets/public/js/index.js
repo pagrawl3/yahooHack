@@ -2,6 +2,7 @@ $(document).ready(function() {
 	//JSLint told me to put for some ECMAScript5 optimizations
 	"use strict";
 
+	var socket = io.connect('/');
 	filepicker.setKey('AKuopPE6CTw0vqFI3RA7Az');
 
 	function bindRoomListeners () {
@@ -19,13 +20,22 @@ $(document).ready(function() {
 	}
 
 	$('#createRoom').click(function() {
-		console.log($('#roomNum').val());
-		socket.emit('createNewRoom', {name: $('#roomNum').val()});
+		console.log(new Date().getTime());
+		socket.emit('createNewRoom', {name: new Date().getTime()});
+	});
+
+	socket.on('createNewRoomSuccess', function (data) {
+		window.roomName = data.name;
+		$('#wrapper').css('opacity', 0);
+		window.setTimeout(function(){
+			$('#wrapper').html(data.html);
+			$('#wrapper').css('opacity', 1);
+		},300)
+		bindRoomListeners();
 	});
 
 
 	//Establish a socket conenction with the server for future stuff
-	var socket = io.connect('/');
 	var start = 0;
 	var stop = 0;
 	var offset = 0;
@@ -77,13 +87,6 @@ $(document).ready(function() {
 	}
 	$('.test-button').on('click', function() {
 		once = false;
-	});
-
-	socket.on('createNewRoomSuccess', function (data) {
-		window.roomName = data.name;
-		console.log(data);
-		$('#wrapper').replaceWith(data.html);
-		bindRoomListeners();
 	});
 
 	socket.on('embedSongSuccess', function (data) {
