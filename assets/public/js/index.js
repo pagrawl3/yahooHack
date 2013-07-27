@@ -9,6 +9,9 @@ $(document).ready(function() {
 		filepicker.pickAndStore({},{},function(data){
 		   console.log(JSON.stringify(data));
 		   $('#url').html(data[0].url);
+		   // $('#url').html(data[0].url)
+		   var roomName = window.roomName
+		   socket.emit('embedSong', {data: data[0], roomName: roomName})
 		});
 	})
 

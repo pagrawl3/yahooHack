@@ -1,5 +1,7 @@
 var mongoose = require('mongoose'),
-    Room = mongoose.model('Room')
+    Room = mongoose.model('Room'),
+    fs 			= require('fs'),
+	jade 		= require('jade')
 
 exports.createNewRoom = function (data, socket) {
 	console.log('creating new room');
@@ -9,15 +11,31 @@ exports.createNewRoom = function (data, socket) {
 			url : newUrl,
 			files : [String]
 		});
-	newRoom.save(function (err, data) {
+	newRoom.save(function (err, data2) {
 		console.log(err, data)
+		var pathToTemplate = require('path').resolve(__dirname, '../views') + '/rooms_partial.jade';
+        var template = fs.readFileSync(pathToTemplate, 'utf8');
+        var jadeFn = jade.compile(template, { filename: pathToTemplate, pretty: true });
+        var renderedTemplate = jadeFn({room: data.name});
+        socket.emit('createNewRoomSuccess', {html : renderedTemplate})
 	});
-	socket.emit('createNewRoomSuccess', {url : newUrl})
 }
 
 exports.getRoom = function (req, res) {
 	var roomName = req.params.name;
-	Room.find({room_name: roomName}, function (err, docs) {
-		res.render('rooms', {room : docs[0].name, url : docs[0].url})
+	Room.findOne({room_name: roomName}, function (err, docs) {
+		res.render('rooms', {name : docs.name, url : docs.url, files : docs.files})
+	})
+}
+
+exports.embedSong = function (data, socket) {
+	Room.findOne({room_name: data.roomName}, function (err, docs) {
+		if (!docs.files) {
+			docs.files = []
+		}
+		docs.files.push(data.data.url)
+		docs.save(function (err, data) {
+			socket.emit('embedSongSuccess', {success: true, message: 'Song was embedded'})
+		});
 	})
 }

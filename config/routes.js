@@ -13,8 +13,10 @@ module.exports = function(app, io) {
  	}, io);
 
  	sock.get('createNewRoom', rooms.createNewRoom, io)
+ 	sock.get('embedSong', rooms.embedSong, io)
 
  	app.get('/rooms/:name', rooms.getRoom)
 	app.get('/*', main.index);
 }
+
 
