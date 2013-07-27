@@ -33,14 +33,31 @@ exports.getRoom = function (req, res) {
 	})
 }
 
-getAlbumArt = function (artist_id, count, socket) {
+getAlbumArt = function (artist_id, count, socket, room, data) {
     console.log(artist_id, typeof(artist_id))
-	request.get('http://developer.echonest.com/api/v4/artist/images?api_key=MYH0286UM2UX0WTYI&id='+artist_id+'&format=json&results=1&start=0&license=unknown', function (err, data){
-		var temp = JSON.parse(data.body)
-		if (!!temp.response.images && temp.response.images.length > 0)
-			socket.emit('getAlbumArtSuccess', {albumArt: temp.response.images[0].url})
-		else
-			socket.emit('getAlbumArtSuccess', {albumArt: 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'})
+	request.get('http://developer.echonest.com/api/v4/artist/images?api_key=MYH0286UM2UX0WTYI&id='+artist_id+'&format=json&results=1&start=0&license=unknown', function (err, data2){
+		var temp = JSON.parse(data2.body)
+		if (!!temp.response.images && temp.response.images.length > 0) {
+			data.data['albumArt'] = temp.response.images[0].url
+			Room.findById(room._id, function (err, newRoom) {
+				newRoom.files = newRoom.files.slice(0,-1)
+    			newRoom.files.push(data.data);
+    			console.log(newRoom.files[0])
+    			newRoom.save(function () {
+					socket.emit('getAlbumArtSuccess', {albumArt: temp.response.images[0].url})
+    			});		
+			})
+		} else {
+			data.data['albumArt'] = 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'
+			Room.findById(room._id, function (err, newRoom) {
+				newRoom.files = newRoom.files.slice(0,-1)
+    			newRoom.files.push(data.data);
+    			console.log(newRoom.files[0])
+    			newRoom.save(function () {
+					socket.emit('getAlbumArtSuccess', {albumArt: 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'})
+    			});		
+			})
+		}
 	})
 }
 
@@ -57,7 +74,18 @@ getMetadata = function (url, count, files, room, data, socket) {
 	        		if (count < 3) {
 	        			getMetadata(url, count + 1, files, room, data, socket)
 	        		} else {
-	        			socket.emit('loadingSuccess', {title: data.data.filename, artist: 'Unknown'})	
+	        			data.data['title'] = data.data.filename
+		        		data.data['artist'] = 'Unknown'
+		        		data.data['albumArt'] = 'http://static.tumblr.com/jn9hrij/20Ul2zzsr/albumart.jpg'
+		        		Room.findById(room._id, function (err, newRoom) {
+		        			newRoom.files = newRoom.files.slice(0,-1)
+		        			newRoom.files.push(data.data);
+		        			console.log(newRoom.files[0])
+		        			newRoom.save(function () {
+			        			console.log('saved ; now emitting')
+								socket.emit('loadingSuccess', {title: data.data.filename, artist: 'Unknown'})	
+		        			});
+		        		})
 	        		}
 	        	} else {
 	        		data.data['title'] = body.response.track.title
@@ -69,7 +97,7 @@ getMetadata = function (url, count, files, room, data, socket) {
 	        			newRoom.save(function () {
 		        			console.log('saved ; now emitting')
 							socket.emit('loadingSuccess', {title: data.data.title, artist: data.data.artist})
-							getAlbumArt(body.response.track.artist_id, 0, socket)
+							getAlbumArt(body.response.track.artist_id, 0, socket, newRoom, data)
 	        			});
 	        		})
 					// if (!!body.response.track.artist_id) {
