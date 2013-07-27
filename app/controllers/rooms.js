@@ -17,7 +17,7 @@ exports.createNewRoom = function (data, socket) {
         var template = fs.readFileSync(pathToTemplate, 'utf8');
         var jadeFn = jade.compile(template, { filename: pathToTemplate, pretty: true });
         var renderedTemplate = jadeFn({room: data.name});
-        socket.emit('createNewRoomSuccess', {html : renderedTemplate})
+        socket.emit('createNewRoomSuccess', {html : renderedTemplate, url : newUrl})
 	});
 }
 
