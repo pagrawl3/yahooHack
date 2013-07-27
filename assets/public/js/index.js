@@ -4,6 +4,9 @@ $(document).ready(function() {
 
 	filepicker.setKey('AKuopPE6CTw0vqFI3RA7Az');
 
+	window.trigger = 1;
+	window.emit = 1;
+
 	function bindRoomListeners () {
 		$('#upload').click(function() {
 			console.log('here')
@@ -22,7 +25,6 @@ $(document).ready(function() {
 	$('#createRoom').click(function() {
 		console.log($('#roomNum').val());
 		socket.emit('createNewRoom', {name: $('#roomNum').val()});
-		window.isHost = 1;
 	});
 
 	//Establish a socket conenction with the server for future stuff
@@ -43,12 +45,20 @@ $(document).ready(function() {
 		$('#upload').hide();
 
 		$('#player').toggleClass('hidden').attr('src', data.url).on('play', function () {
-			socket.emit('startPlay');
+			if (window.emit) {
+				socket.emit('startPlay');
+				window.trigger = 0;
+			}
+			window.emit = 1;
 		});
 	});
 
 	socket.on('play', function () {
-		$('#player').trigger('play');
+		if (window.trigger) {
+			$('#player').trigger('play');
+			window.emit = 0;
+		}
+		window.trigger = 1;
 	})
 
 });

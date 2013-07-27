@@ -9,7 +9,7 @@ exports.createNewRoom = function (data, socket) {
 		newRoom = new Room({
 			room_name: data.name,
 			url : newUrl,
-			files : [String]
+			files : []
 		});
 	newRoom.save(function (err, data2) {
 		console.log(err, data)
@@ -22,10 +22,12 @@ exports.createNewRoom = function (data, socket) {
 }
 
 exports.getRoom = function (req, res) {
-	var roomName = req.params.name;
+	var roomName = req.params.roomId;
+	console.log(req.params.roomId)
 	Room.findOne({room_name: roomName}, function (err, docs) {
-		// console.log(roomName)
-		res.render('rooms', {room : docs.room_name, url : docs.url, files : docs.files})
+		console.log('logging roomName : ', docs)
+		// res.render('index');
+		res.render('rooms', {room : docs.room_name, url : docs.url, files : docs.files[0]})
 	})
 }
 

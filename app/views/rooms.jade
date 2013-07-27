@@ -1,7 +1,8 @@
-include ./includes/header
-
-body
-	div.row
-		h1 Room: #{room}
-		audio#player(src=#{files})
-	include ./includes/footer
+html(lang="en")
+	include ./includes/header
+	body
+		div.row
+			h1 
+				|Room:
+			audio#player(src=files)
+		include ./includes/footer
