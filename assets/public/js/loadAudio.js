@@ -33,6 +33,5 @@ function init() {
 	$('#stop').toggle(function () {
 		window.source.disconnect();
 	}, function () {
-		
 	});
 }

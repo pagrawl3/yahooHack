@@ -8,6 +8,7 @@
 		"jade"	  	: "*",
 		"mongoose"	: "*",
 		"connect" 	: "*",
-		"socket.io"	: "*"
+		"socket.io"	: "*",
+		"socket-ntp": "*"
 	}
 }

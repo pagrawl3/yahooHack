@@ -4,12 +4,19 @@ module.exports = function(app, io) {
 
 	//__IMPORT ALL THE CONTROLLERS
 	var	main 			= require('../app/controllers/main')
+	app.get('/landing', main.landing);
+	app.get('/client', main.client);
 	app.get('/*', main.index);
 
  	sock.get('test', function(data, socket) {
  		console.log('message on server received');
  		console.log(data);
- 		socket.emit('testCallback', {success:true});
+ 		socket.emit('testCallback', {success:true, index: data.index});
  	}, io);
+
+ 	sock.get('audio-time', function(data, socket) {
+ 		console.log(data.data);
+ 		socket.broadcast.emit('time2', {data: data.data, timestamp: data.timestamp});
+ 	}, io)
 }
 
