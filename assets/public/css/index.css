@@ -283,6 +283,14 @@ html {
 audio {
   margin-bottom: 10px;
 }
+#audio-over {
+  position: absolute;
+  width: 32px;
+  height: 28px;
+  left: 22%;
+  z-index: 100;
+  background: #424242;
+}
 #queue .div {
   text-align: center;
 }

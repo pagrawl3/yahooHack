@@ -1,6 +1,5 @@
 $(document).ready(function() {
 	//JSLint told me to put for some ECMAScript5 optimizations
-	"use strict";
 
 	var socket = io.connect('/');
 	filepicker.setKey('AKuopPE6CTw0vqFI3RA7Az');
@@ -76,19 +75,19 @@ $(document).ready(function() {
 		if($('#sub').length > 0) {
 			playSub($('#sub'));
 		}
-	function bindRoomListeners () {
-		$('#upload').click(function() {
-			console.log('here')
-			filepicker.pickAndStore({},{},function(data){
-			   console.log(JSON.stringify(data));
-			   $('#url').html(data[0].url);
-			   // // $('#url').html(data[0].url)
-			   var roomName = window.roomName;
-			   console.log(roomName)
-			   socket.emit('embedSong', {data: data[0], roomName: roomName});
-			});
+	// function bindRoomListeners () {
+	$('html').on('click', '.file-upload', function() {
+		console.log('here')
+		filepicker.pickAndStore({},{},function(data){
+		   console.log(JSON.stringify(data));
+		   $('#url').html(data[0].url);
+		   // // $('#url').html(data[0].url)
+		   var roomName = window.roomName;
+		   console.log(roomName)
+		   socket.emit('embedSong', {data: data[0], roomName: roomName});
 		});
-	}
+	});
+	// }
 
 	$('#createRoom').click(function() {
 		console.log(new Date().getTime());
@@ -115,6 +114,11 @@ $(document).ready(function() {
 			window.setTimeout(function(){
 				$('.no-songs-wrapper').css('display', 'none');
 			}, 200);
+		} else {
+			function createNode(url, filename) {
+				return node = '<li url='+url+' class="song colums large-12"><div class="album"></div><span class="title">'+filename+' <br></span><span class="title"> <br></span><span class="artist"></span></li>'
+			}
+			$('ul.songs').append(createNode(data.url, data.filename))
 		}
 	});
 
@@ -127,7 +131,7 @@ $(document).ready(function() {
 			$('#wrapper').html(data.html);
 			$('#wrapper').css('opacity', 1);
 			$('#wrapper').css('marginTop', '0px');
-			bindRoomListeners();
+			// bindRoomListeners();
 		},500)
 	});
 
