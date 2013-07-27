@@ -12,6 +12,7 @@ $(document).ready(function() {
 			   $('#url').html(data[0].url);
 			   // $('#url').html(data[0].url)
 			   var roomName = window.roomName;
+			   console.log(roomName)
 			   socket.emit('embedSong', {data: data[0], roomName: roomName});
 			});
 		});

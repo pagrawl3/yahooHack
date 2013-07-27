@@ -17,18 +17,20 @@ exports.createNewRoom = function (data, socket) {
         var template = fs.readFileSync(pathToTemplate, 'utf8');
         var jadeFn = jade.compile(template, { filename: pathToTemplate, pretty: true });
         var renderedTemplate = jadeFn({room: data.name});
-        socket.emit('createNewRoomSuccess', {html : renderedTemplate, url : newUrl})
+        socket.emit('createNewRoomSuccess', {html : renderedTemplate, url : newUrl, name: data.name})
 	});
 }
 
 exports.getRoom = function (req, res) {
 	var roomName = req.params.name;
 	Room.findOne({room_name: roomName}, function (err, docs) {
-		res.render('rooms', {name : docs.name, url : docs.url, files : docs.files})
+		// console.log(roomName)
+		res.render('rooms', {room : docs.room_name, url : docs.url, files : docs.files})
 	})
 }
 
 exports.embedSong = function (data, socket) {
+	console.log(data.roomName)
 	Room.findOne({room_name: data.roomName}, function (err, docs) {
 		if (!docs.files) {
 			docs.files = []

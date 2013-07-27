@@ -2,6 +2,7 @@ include ./includes/header
 
 body
 	div.row
-		h1 #{room}
-		a.button Create Room
+		h1 Room: #{room}
+		a#upload.button Pick a Song
+		audio#player.hidden
 	include ./includes/footer
