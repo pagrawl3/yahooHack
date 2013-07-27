@@ -6,7 +6,6 @@ module.exports = function(app, io) {
 	var	main 			= require('../app/controllers/main')
 	app.get('/landing', main.landing);
 	app.get('/client', main.client);
-	app.get('/*', main.index);
 
 	var	rooms 			= require('../app/controllers/rooms')
 
@@ -19,12 +18,11 @@ module.exports = function(app, io) {
  	sock.get('createNewRoom', rooms.createNewRoom, io)
  	sock.get('embedSong', rooms.embedSong, io)
  	sock.get('startPlay', rooms.startPlay, io)
+ 	sock.get('pop', rooms.pop, io)
 
  	app.get('/rooms/:roomId', rooms.getRoom)
- 	// app.get('/rooms/:roomId', function(req, res) {
- 	// 	console.log(req.params.roomId);
- 	// 	res.render('index');
- 	// })
+
+	app.get('/*', main.index);
 }
 
 

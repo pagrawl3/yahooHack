@@ -26,6 +26,7 @@ $(document).ready(function() {
 		socket.emit('createNewRoom', {name: $('#roomNum').val()});
 	});
 
+
 	//Establish a socket conenction with the server for future stuff
 	var socket = io.connect('/');
 	var start = 0;
@@ -89,16 +90,24 @@ $(document).ready(function() {
 	});
 
 	socket.on('embedSongSuccess', function (data) {
-		$('#upload').hide();
-
+		// $('#upload').hide();
+		console.log(data.files)
 		$('#player').toggleClass('hidden').attr('src', data.url).on('play', function () {
 			if (window.emit) {
 				socket.emit('startPlay');
 				window.trigger = 0;
 			}
 			window.emit = 1;
+			console.log(this)
+			document.getElementById('player').addEventListener('ended', function() {
+				socket.emit('pop', {roomName: window.roomName})
+			})
 		});
 	});
+
+	socket.on('popSuccess', function (data) {
+		console.log(data)
+	})
 
 	socket.on('play', function () {
 		if (window.trigger) {
