@@ -22,6 +22,7 @@ $(document).ready(function() {
 	$('#createRoom').click(function() {
 		console.log($('#roomNum').val());
 		socket.emit('createNewRoom', {name: $('#roomNum').val()});
+		window.isHost = 1;
 	});
 
 	//Establish a socket conenction with the server for future stuff
@@ -39,7 +40,15 @@ $(document).ready(function() {
 	});
 
 	socket.on('embedSongSuccess', function (data) {
-		$('#player').toggleClass('hidden');
+		$('#upload').hide();
+
+		$('#player').toggleClass('hidden').attr('src', data.url).on('play', function () {
+			socket.emit('startPlay');
+		});
 	});
+
+	socket.on('play', function () {
+		$('#player').trigger('play');
+	})
 
 });

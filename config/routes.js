@@ -14,6 +14,7 @@ module.exports = function(app, io) {
 
  	sock.get('createNewRoom', rooms.createNewRoom, io)
  	sock.get('embedSong', rooms.embedSong, io)
+ 	sock.get('startPlay', rooms.startPlay, io)
 
  	app.get('/rooms/:name', rooms.getRoom)
 	app.get('/*', main.index);

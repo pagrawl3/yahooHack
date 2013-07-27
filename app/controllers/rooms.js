@@ -41,3 +41,7 @@ exports.embedSong = function (data, socket) {
 		});
 	})
 }
+
+exports.startPlay = function (data, socket) {
+	socket.emit('play');
+}
