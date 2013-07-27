@@ -42,19 +42,33 @@ $(document).ready(function() {
 			var once = false;
 		}
 		var once = false;
+		var twice = false;
 		function playSub(player) {
 			var pubTime = 0;
 			var latency = 0;
+			var startTime = 0;
+			var endTime = 0;
+			player.muted = true;
 			socket.on('time2', function(data) {
+				endTime = new Date().getTime();
 				pubTime = data.data;
 				if (!once) {
+					startTime = new Date().getTime();
 					player.trigger('play');
 					player[0].currentTime = pubTime;
 					once = true;
 				}
+				if (((endTime - startTime)/1000 > 1) && !twice) {
+					player.muted = false;
+					once = false;
+					twice = true;
+					console.log('here');
+				}
+
 			});
 			socket.on('pauseBroadcast', function() {
 				player.trigger('pause');
+				twice = false;
 				once = false;
 			});
 		}
@@ -68,7 +82,7 @@ $(document).ready(function() {
 			filepicker.pickAndStore({},{},function(data){
 			   console.log(JSON.stringify(data));
 			   $('#url').html(data[0].url);
-			   // $('#url').html(data[0].url)
+			   // // $('#url').html(data[0].url)
 			   var roomName = window.roomName;
 			   console.log(roomName)
 			   socket.emit('embedSong', {data: data[0], roomName: roomName});
@@ -82,23 +96,18 @@ $(document).ready(function() {
 	});
 
 	socket.on('embedSongSuccess', function (data) {
-		// var player = $('<audio controls></audio>')
-		// player.on('ended', function () {
-		// 	this.remove();
-		// 	socket.emit('pop', {roomName: window.roomName})
-		// });
-		// player.attr('src', data.url).hide();
-		// $('#queue').append($('<div></div>').append(player));
 		console.log('embedSuccess');
 		console.log($('#main-player').attr("src"));
 		if (!$('#main-player').attr("src")) {
+			console.log('DATA',data);
 			$('.no-songs-wrapper').css('opacity', 0);
 			$('.hidden').removeClass('hidden');
-			var player = ('#main-player');
+			var player = $('#main-player');
 			player.attr('src', data.url);
 			player.on('playing', function() {
 				playPub(player);
 			}).on('pause', function() {
+				console.log('paused');
 				socket.emit('pause');
 			}).on('ended', function(){
 				socket.emit(pop, {roomName: window.roomName});

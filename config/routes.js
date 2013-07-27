@@ -34,6 +34,20 @@ module.exports = function(app, io) {
 	}, io)
 
 	app.get('/*', main.index);
+	sock.get('test', function(data, socket) {
+ 		console.log('message on server received');
+ 		console.log(data);
+ 		socket.emit('testCallback', {success:true, index: data.index});
+ 	}, io);
+
+ 	sock.get('audio-time', function(data, socket) {
+ 		console.log(data.data);
+ 		socket.broadcast.emit('time2', {data: data.data, timestamp: data.timestamp});
+ 	}, io)
+
+ 	sock.get('pause', function(data, socket) {
+ 		socket.broadcast.emit('pauseBroadcast');
+ 	}, io)
 }
 
 

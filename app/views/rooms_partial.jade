@@ -1,7 +1,10 @@
 header
 	.room-url
 		.icon.link
-		input(type="text", value="musync.com/rooms/#{room}", readonly)
+		if (userType == 'publisher')
+			input(type="text", value="musync.com/rooms/#{room}", readonly)
+		else
+			input(type="text", value="musync.com/rooms/#{room_name}", readonly)
 	.logo
 
 if (files)
@@ -14,9 +17,9 @@ if (files)
 					h3.title #{files[0].title}
 					h5.artist #{files[0].artist}
 				if (userType == 'publisher')
-					audio#main-player(src=#{files[0].url} , controls)
+					audio#main-player(src=files[0].url , controls)
 				else
-					audio#sub(src=#{files[0].url} , controls)
+					audio#sub(src=files[0].url, controls)
 else
 	section.now-playing.row.hidden
 		.np-wrapper.columns.large-12
