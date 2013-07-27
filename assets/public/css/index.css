@@ -1,5 +1,107 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
 h1 {
   color: #666 !important;
+}
+body {
+  background: url(../img/bg.jpg) 50% 50% !important;
+}
+* {
+  font-family: 'Open Sans', sans-serif !important;
+  font-weight: 300 !important;
+}
+* h1 {
+  margin: 0 !important;
+  font-size: 4em !important;
+}
+* h4 {
+  font-weight: 400 !important;
+  color: #AAA !important;
+}
+* .button {
+  position: relative;
+  background: transparent !important;
+  border: 3px solid #2ECC71 !important;
+  padding: 15px 40px !important;
+  color: #2ECC71 !important;
+  font-size: 1.5em !important;
+  -webkit-transition: 0.15s ease-out !important;
+  -moz-transition: 0.15s ease-out !important;
+  -ms-transition: 0.15s ease-out !important;
+  -o-transition: 0.15s ease-out !important;
+  transition: 0.15s ease-out !important;
+}
+* .button:hover {
+  top: -5px;
+  border-width: 8px !important;
+}
+section.splash {
+  display: block;
+  margin: 50px auto 50px auto;
+  margin-top: 10%;
+  text-align: center;
+}
+section.splash .logo {
+  background: url(../img/logo.svg);
+  background-size: 200px 200px;
+  width: 200px;
+  height: 200px;
+  display: block;
+  margin: 20 auto;
+}
+section.splash .logo.inner {
+  position: relative;
+  background: url(../img/logo.svg);
+  background-size: 100px 100px;
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 20 auto;
+  margin-top: -150px;
+  margin-bottom: 100px;
+}
+@-webkit-keyframes rotating {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+.rotating {
+  -webkit-animation: rotating 20s linear infinite;
+}
+section.wrapper {
+  margin-top: 50px;
+}
+section.wrapper .box {
+  text-align: center;
+  height: 250px;
+  padding: 10px;
+}
+section.wrapper .box .wrap {
+  background: #fff;
+  height: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+section.wrapper .box .wrap .icon {
+  margin: 0 auto !important;
+  width: 128px;
+  height: 128px;
+  background: #ddd;
+}
+section.wrapper .box .wrap p {
+  padding: 30px;
+}
+footer {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  background: #444;
+  position: absolute;
+  bottom: 0;
+  color: #FFF;
+  font-weight: 400 !important;
 }
 .hidden {
   display: none;
