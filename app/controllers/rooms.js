@@ -92,7 +92,7 @@ exports.embedSong = function (data, socket) {
 		docs.files.push(data.data)
 		console.log(docs.files)
 		docs.save(function (err) {
-			socket.emit('embedSongSuccess', {success: true, message: 'Song was embedded', url: data.data.url, metadata:null, files: docs.files, player : true})
+			socket.emit('embedSongSuccess', {success: true, message: 'Song was embedded', url: data.data.url, metadata:null, files: docs.files, player : true, filename: data.data.filename})
 			getMetadata(data.data.url, 0, docs.files, docs, data, socket)
 		});
 	})
