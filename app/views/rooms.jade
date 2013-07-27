@@ -1,8 +1,10 @@
 html(lang="en")
 	include ./includes/header
 	body
-		div.row
-			h1 
-				|Room:
-			audio#player(src=files)
+		div.row.text-center
+			h1 Room: #{room_name}
+			each item in files
+				- var jsonString = item['url']
+				div
+					audio#sub(src=jsonString, controls)
 		include ./includes/footer

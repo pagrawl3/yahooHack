@@ -28,7 +28,7 @@ exports.getRoom = function (req, res) {
 	Room.findOne({room_name: roomName}, function (err, docs) {
 		console.log('logging roomName : ', docs)
 		// res.render('index');
-		res.render('rooms', {room : docs.room_name, url : docs.url, files : docs.files[0]})
+		res.render('rooms', docs)
 	})
 }
 

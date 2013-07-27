@@ -1,8 +1,13 @@
 include ./includes/header
 
 body
-	div#wrapper.row
-		div.large-12.columns.text-center
-			input#roomNum.large-3.columns(type='text', placeholder="Room #")
+	#wrapper.row
+		section.splash.large-12.small-12.columns
+			.logo.rotating
+			//- .logo.inner
+			h1 Musync
+			h4 A new way to listen to music.
+		.large-12.small-12.columns.text-center
 			a#createRoom.button Create Room
+
 	include ./includes/footer
