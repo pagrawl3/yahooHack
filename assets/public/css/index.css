@@ -1,6 +1,22 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
 body {
   background: url(../img/bg.jpg) 50% 0% fixed !important;
+  z-index: -2;
+}
+#overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #F5F5F5;
+  opacity: 0;
+  -webkit-transition: 0.2s ease-out;
+  -moz-transition: 0.2s ease-out;
+  -ms-transition: 0.2s ease-out;
+  -o-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
+  z-index: -1;
 }
 * {
   font-family: 'Open Sans', sans-serif !important;
@@ -16,11 +32,11 @@ body {
   color: #AAA !important;
 }
 * #wrapper {
-  -webkit-transition: 0.4s ease-out;
-  -moz-transition: 0.4s ease-out;
-  -ms-transition: 0.4s ease-out;
-  -o-transition: 0.4s ease-out;
-  transition: 0.4s ease-out;
+  -webkit-transition: 0.2s ease-out;
+  -moz-transition: 0.2s ease-out;
+  -ms-transition: 0.2s ease-out;
+  -o-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
 }
 * .button {
   position: relative;
@@ -63,6 +79,150 @@ section.splash .logo.inner {
   margin: 20 auto;
   margin-top: -150px;
   margin-bottom: 100px;
+}
+.room-url {
+  padding: 1.25em;
+  background: #394047;
+  width: 100%;
+}
+.room-url input {
+  display: block;
+  padding: 0 1.25em !important;
+  width: 18.75em !important;
+  background: transparent !important;
+  border: 3px solid #2ECC71 !important;
+  color: #FFF !important;
+  font-weight: 600;
+  font-size: 1.4em !important;
+  margin: 0 !important;
+  line-height: 48px !important;
+  padding-left: 60px !important;
+}
+.room-url .icon.link {
+  width: 32px;
+  height: 32px;
+  margin-top: 10px;
+  margin-left: 14px;
+  background: url(../img/link.svg);
+  background-size: 32px 32px !important;
+  position: absolute;
+}
+section.now-playing {
+  max-width: 800px;
+  margin: 50px auto;
+  text-align: center;
+  overflow: hidden;
+}
+section.now-playing h2 {
+  text-align: center;
+  padding: 20px;
+}
+section.now-playing h3 {
+  margin: 0 auto !important;
+}
+section.now-playing audio {
+  text-align: center;
+  margin: 0px auto;
+}
+section.now-playing .text {
+  padding: 20px 0;
+}
+section.now-playing .art {
+  background: #ddd;
+  height: 200px;
+  margin: 0;
+}
+.no-songs {
+  text-align: center;
+  margin-top: 10% !important;
+}
+.no-songs h4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+section.upload {
+  margin: 0 auto;
+  padding: 30px 0;
+  border: 3px dashed #CCC;
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: 0.2s ease-out;
+  -moz-transition: 0.2s ease-out;
+  -ms-transition: 0.2s ease-out;
+  -o-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
+}
+section.upload .icon.upload {
+  width: 8em;
+  height: 8em;
+  display: inline-block;
+  background: url(../img/upload.svg);
+  background-size: 8em 8em;
+  margin-top: -15px;
+}
+section.upload h3 {
+  margin-top: -10px;
+}
+section.upload:hover {
+  border-color: #333;
+}
+section.queue {
+  background: #EEE;
+  padding: 20px;
+  overflow: hidden;
+  position: relative;
+}
+section.queue h3 {
+  text-align: center;
+  padding: 20px;
+}
+section.queue .icon.upload {
+  position: absolute;
+  right: 32px;
+  top: 32px;
+  width: 64px;
+  height: 64px;
+  background: url(../img/upload.svg);
+  background-size: 64px 64px;
+  cursor: pointer;
+  opacity: 0.5;
+  -webkit-transition: 0.2s ease-out;
+  -moz-transition: 0.2s ease-out;
+  -ms-transition: 0.2s ease-out;
+  -o-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
+}
+section.queue .icon.upload:hover {
+  opacity: 1;
+}
+section.queue ul.songs {
+  list-style: none;
+  position: relative;
+}
+section.queue ul.songs li.song {
+  position: relative;
+  padding: 20px;
+  margin: 10px 0;
+  background: #E5E5E5;
+  overflow: hidden;
+}
+section.queue ul.songs li.song .album {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100%;
+  background: #DDD;
+}
+section.queue ul.songs li.song span {
+  margin-left: 100px;
+}
+section.queue ul.songs li.song span.title {
+  font-weight: 600;
+  font-size: 1.2em;
+}
+section.queue ul.songs li.song span.artist {
+  color: #777;
 }
 @-webkit-keyframes rotating {
   from {
@@ -125,4 +285,13 @@ audio {
 }
 #queue .div {
   text-align: center;
+}
+.hidden {
+  display: none;
+  opacity: 0;
+  -webkit-transition: 0.2s ease-out;
+  -moz-transition: 0.2s ease-out;
+  -ms-transition: 0.2s ease-out;
+  -o-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
 }

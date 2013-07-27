@@ -5,6 +5,63 @@ $(document).ready(function() {
 	var socket = io.connect('/');
 	filepicker.setKey('AKuopPE6CTw0vqFI3RA7Az');
 
+	var start = 0;
+		var stop = 0;
+		var offset = 0;
+		var offsets = [];
+		function playPub(player) {
+			//Establish a socket conenction with the server for future stuff
+			var i = 0
+			for (i =0; i< 10; i++) {
+				window.setTimeout(function(){
+					start = window.performance.now();
+					socket.emit('test', {success: true});
+				},offset);
+
+				if (i = 9)
+				 offsetCalibrationCompletePub(player);
+			}
+			socket.on('testCallback', function(data) {
+				stop = window.performance.now();
+				offset += (stop - start)/10;
+			});
+		}
+
+		function offsetCalibrationCompletePub(player) {
+			player.trigger('play');
+			var bool = false
+			player.on('timeupdate', function(data){
+				if (!bool) {
+					player[0].currentTime += offset;
+					bool = true;
+				}
+				var times = (player[0].currentTime);
+				socket.emit('audio-time', {data: times, timestamp: data.timeStamp});
+			})
+
+			var once = false;
+		}
+		var once = false;
+		function playSub(player) {
+			var pubTime = 0;
+			var latency = 0;
+			socket.on('time2', function(data) {
+				pubTime = data.data;
+				if (!once) {
+					player.trigger('play');
+					player[0].currentTime = pubTime;
+					once = true;
+				}
+			});
+			socket.on('pauseBroadcast', function() {
+				player.trigger('pause');
+				once = false;
+			});
+		}
+
+		if($('#sub').length > 0) {
+			playSub($('#sub'));
+		}
 	function bindRoomListeners () {
 		$('#upload').click(function() {
 			console.log('here')
@@ -24,80 +81,50 @@ $(document).ready(function() {
 		socket.emit('createNewRoom', {name: new Date().getTime()});
 	});
 
+	socket.on('embedSongSuccess', function (data) {
+		// var player = $('<audio controls></audio>')
+		// player.on('ended', function () {
+		// 	this.remove();
+		// 	socket.emit('pop', {roomName: window.roomName})
+		// });
+		// player.attr('src', data.url).hide();
+		// $('#queue').append($('<div></div>').append(player));
+		console.log('embedSuccess');
+		console.log($('#main-player').attr("src"));
+		if (!$('#main-player').attr("src")) {
+			$('.no-songs-wrapper').css('opacity', 0);
+			$('.hidden').removeClass('hidden');
+			var player = ('#main-player');
+			player.attr('src', data.url);
+			player.on('playing', function() {
+				playPub(player);
+			}).on('pause', function() {
+				socket.emit('pause');
+			}).on('ended', function(){
+				socket.emit(pop, {roomName: window.roomName});
+			})
+			window.setTimeout(function(){
+				$('.no-songs-wrapper').css('display', 'none');
+			}, 200);
+		}
+	});
+
 	socket.on('createNewRoomSuccess', function (data) {
 		window.roomName = data.name;
 		$('#wrapper').css('opacity', 0);
+		$('#wrapper').css('marginTop', '-20px');
+		$('#overlay').css('opacity', 1);
 		window.setTimeout(function(){
 			$('#wrapper').html(data.html);
 			$('#wrapper').css('opacity', 1);
-		},300)
-		bindRoomListeners();
+			$('#wrapper').css('marginTop', '0px');
+			bindRoomListeners();
+		},500)
 	});
 
 
-	//Establish a socket conenction with the server for future stuff
-	var start = 0;
-	var stop = 0;
-	var offset = 0;
-	var offsets = [];
-	var i = 0
-	for (i =0; i< 10; i++) {
-		window.setTimeout(function(){
-			start = window.performance.now();
-			socket.emit('test', {success: true});
-		},offset);
-
-		if (i = 9)
-		 offsetCalibrationComplete();
-	}
-	socket.on('testCallback', function(data) {
-		stop = window.performance.now();
-		offset += (stop - start)/10;
-	});
-
-	function offsetCalibrationComplete() {
-		if (document.getElementById("pub")) {
-			var pub = document.getElementById("pub");
-			pub.play()
-			var bool = false
-			pub.addEventListener('timeupdate', function(data){
-				if (!bool) {
-					pub.currentTime += offset;
-					bool = true;
-				}
-				var times = (pub.currentTime);
-				socket.emit('audio-time', {data: times, timestamp: data.timeStamp});
-			})
-		}
-
-		var once = false;
-		if (document.getElementById("sub")) {
-			var sub = document.getElementById("sub");
-			var pubTime = 0;
-			var latency = 0;
-			socket.on('time2', function(data) {
-				pubTime = data.data;
-				if (!once) {
-					sub.play();
-					sub.currentTime = pubTime;
-					once = true;
-				}
-			})
-		}
-	}
 	$('.test-button').on('click', function() {
 		once = false;
-	});
-
-	socket.on('embedSongSuccess', function (data) {
-		var player = $('<audio controls></audio>')
-		player.on('ended', function () {
-			this.remove();
-			socket.emit('pop', {roomName: window.roomName})
-		});
-		player.attr('src', data.url).hide();
-		$('#queue').append($('<div></div>').append(player));
-		player.fadeIn(800);
 	});
 
 	socket.on('popSuccess', function (data) {

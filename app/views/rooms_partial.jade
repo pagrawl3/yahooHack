@@ -1,4 +1,53 @@
-div.row.text-center
-	h1 Room: #{room}
-	div#queue
-	a#upload.button Add a Song
+header
+	.room-url
+		.icon.link
+		input(type="text", value="musync.com/rooms/#{room}", readonly)
+	.logo
+
+if (files)
+	section.now-playing.row
+		.np-wrapper.columns.large-12
+			h2 Now Playing
+			.art.columns.large-4
+			.info.columns.large-8
+				.text
+					h3.title #{files[0].title}
+					h5.artist #{files[0].artist}
+				if (userType == 'publisher')
+					audio#main-player(src=#{files[0].url} , controls)
+				else
+					audio#sub(src=#{files[0].url} , controls)
+else
+	section.now-playing.row.hidden
+		.np-wrapper.columns.large-12
+			h2 Now Playing
+			.art.columns.large-4
+			.info.columns.large-8
+				.text
+					h3.title
+					h5.artist
+				audio#main-player(controls)
+	.no-songs-wrapper
+		.row.no-songs
+			h4 No Songs have been uploaded yet
+		section.upload.row#upload
+			.np-wrapper.columns.large-12
+				.icon.upload
+				h3 Upload a song
+
+if (files)
+	section.queue.row
+		section.queue.row.hidden
+		h3 Queue
+		.icon.upload
+		ul.songs
+			each item in files
+				li.song.colums.large-12(url = #{item.url})
+					.album
+					span.title #{item.title} <br>
+					span.artist #{item.artist}
+else
+	section.queue.row.hidden
+		h3 Queue
+		.icon.upload
+		ul.songs

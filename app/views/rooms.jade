@@ -1,10 +1,6 @@
-html(lang="en")
-	include ./includes/header
-	body
-		div.row.text-center
-			h1 Room: #{room_name}
-			each item in files
-				- var jsonString = item['url']
-				div
-					audio#player(src=jsonString, controls)
-		include ./includes/footer
+include ./includes/header
+body
+	#overlay
+	#wrapper
+		include ./rooms_partial
+	include ./includes/footer
