@@ -44,7 +44,11 @@ $(document).ready(function() {
 
 	socket.on('embedSongSuccess', function (data) {
 		// $('#upload').hide();
-		console.log(data.files)
+		console.log(data.message)
+		console.log(data.metadata)
+		console.log(data.player)
+		if(data.player) {
+		
 		$('#player').toggleClass('hidden').attr('src', data.url).on('play', function () {
 			if (window.emit) {
 				socket.emit('startPlay');
@@ -56,9 +60,24 @@ $(document).ready(function() {
 				socket.emit('pop', {roomName: window.roomName})
 			})
 		});
+		}
+		else {
+			if(data.metadata !== null) {
+				console.log(data.metadata.track.title)
+				console.log(data.metadata.track.artist)
+			}
+		}
 	});
 
 	socket.on('popSuccess', function (data) {
+		console.log(data)
+	})
+
+	socket.on('getAlbumArtSuccess', function (data) {
+		console.log(data)
+	})
+
+	socket.on('loadingSuccess', function (data) {
 		console.log(data)
 	})
 
